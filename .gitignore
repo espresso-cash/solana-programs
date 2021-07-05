@@ -1,0 +1,15 @@
+bin/
+node_modules/
+dist/
+.idea/
+target/
+*~
+*.swp
+*.swo
+.anchor
+test-ledger
+examples/*/Cargo.lock
+examples/**/Cargo.lock
+.DS_Store
+docs/yarn.lock
+ts/docs/
