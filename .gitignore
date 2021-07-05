@@ -8,8 +8,8 @@ target/
 *.swo
 .anchor
 test-ledger
-examples/*/Cargo.lock
-examples/**/Cargo.lock
+contract/*/Cargo.lock
+contract/**/Cargo.lock
 .DS_Store
 docs/yarn.lock
 ts/docs/
