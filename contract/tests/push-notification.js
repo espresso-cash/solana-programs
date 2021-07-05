@@ -190,9 +190,6 @@ describe("Fee Notification Collector", () => {
       assert.equal(err.msg, errMsg);
       assert.equal(err.code, 304  );
     }
-
-
-    
   });
 
   it("should return an error if updater is wrong when Update and Send Notification", async () => {

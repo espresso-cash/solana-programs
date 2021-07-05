@@ -17,7 +17,7 @@ async function main() {
   const idl = JSON.parse(require('fs').readFileSync('./target/idl/fee_notification_collector.json', 'utf8'));
 
   // Address of the deployed program.
-  const programId = new anchor.web3.PublicKey('95hdoPdes2GVgqkPBuNVoHTnsg8R1j6amtiZzuMqzrvb');
+  const programId = new anchor.web3.PublicKey('F88FEx1ua6T4q5JjFZE6q77yj3bXTgsnvVoEJHxeoEDk');
 
   // Generate the program client from IDL.
   const program = new anchor.Program(idl, programId);
