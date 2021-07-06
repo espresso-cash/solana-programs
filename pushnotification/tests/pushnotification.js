@@ -20,7 +20,7 @@ describe("Push Notification Fee Collector", () => {
   let receiver = anchor.web3.Keypair.generate();
 
   it("initialized the smart contract", async () => {
-    
+
     await program.rpc.init(new BN(443000), {
       accounts: {
         mainData: mainData.publicKey,
@@ -66,7 +66,7 @@ describe("Push Notification Fee Collector", () => {
     assert.ok(vaultBalance === 440561 );
   });
 
-  it("Prepay the same notification should return an error", async () => {
+  it("Prepay the same notification id should return an error", async () => {
 
     payer= program.provider.wallet;
 

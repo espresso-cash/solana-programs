@@ -3,9 +3,7 @@
 // ergonomic example, see `tests/basic-0.js` in this workspace.
 
 const anchor = require('@project-serum/anchor');
-const serumCmn = require("@project-serum/common");
-const TokenInstructions = require("@project-serum/serum").TokenInstructions;
-
+const BN = anchor.BN;
 
 
 // Configure the local cluster.
@@ -14,7 +12,7 @@ anchor.setProvider(anchor.Provider.local("https://api.devnet.solana.com"));
 async function main() {
   // #region main
   // Read the generated IDL.
-  const idl = JSON.parse(require('fs').readFileSync('./target/idl/fee_notification_collector.json', 'utf8'));
+  const idl = JSON.parse(require('fs').readFileSync('./target/idl/pushnotification.json', 'utf8'));
 
   // Address of the deployed program.
   const programId = new anchor.web3.PublicKey('4vAAGuHTDeMS8Enxwem7nKakcDh23Q7H1iDQafxMRzcd');

@@ -1,4 +1,5 @@
 //! A smart contract to collect fees for present or future push notifications.
+// Please check as reference: https://camo.githubusercontent.com/22f10a3ae8f4e54fa3deb08bfb3f5114342a5862e00a0e685f8a9d5a048a348e/68747470733a2f2f7374617469632e7377696d6c616e65732e696f2f30363738623063306235336534626531613439303536363936623361316134332e706e67
 
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
