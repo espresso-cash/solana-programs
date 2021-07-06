@@ -12,9 +12,11 @@ pub mod pushnotification {
 
     pub fn init(
         ctx: Context<Init>,
+        fee: u64,
     ) -> Result<()> {
         let main_data = &mut ctx.accounts.main_data;
         main_data.vault = *ctx.accounts.vault.to_account_info().key;
+        main_data.fee = fee;
         msg!("Initialized");
         Ok(())
     }
@@ -29,8 +31,6 @@ pub mod pushnotification {
 
         let recipient = &ctx.accounts.vault;
         
-        let fee = 443000;
-        
         let main_data = &mut ctx.accounts.main_data;
 
         let notification = main_data.notifications.iter().find(|x| x.notification_id == notification_id);
@@ -41,7 +41,7 @@ pub mod pushnotification {
         }
         else
         {
-            let instruction = &solana_program::system_instruction::transfer(sender.key, recipient.key, fee);
+            let instruction = &solana_program::system_instruction::transfer(sender.key, recipient.key, main_data.fee);
             solana_program::program::invoke(&instruction, &[fee_payer.clone(), sender.clone(), recipient.clone()]);
 
             let new_notification = Notification {
@@ -122,8 +122,6 @@ pub mod pushnotification {
 
         let recipient = &ctx.accounts.vault;
         
-        let fee = 443000;
-        
         let main_data = &mut ctx.accounts.main_data;
 
         let notification = main_data.notifications.iter().find(|x| x.notification_id == notification_id);
@@ -134,7 +132,7 @@ pub mod pushnotification {
         }
         else
         {
-            let instruction = &solana_program::system_instruction::transfer(sender.key, recipient.key, fee);
+            let instruction = &solana_program::system_instruction::transfer(sender.key, recipient.key, main_data.fee);
             solana_program::program::invoke(&instruction, &[fee_payer.clone(), sender.clone(), recipient.clone()]);
 
             let new_notification = Notification {
@@ -220,6 +218,7 @@ pub struct Send<'info> {
 pub struct MainData {
     updater: Pubkey,
     vault: Pubkey,
+    fee: u64,
     notifications: Vec<Notification>,
 }
 

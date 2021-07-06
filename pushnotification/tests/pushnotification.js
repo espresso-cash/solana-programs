@@ -1,7 +1,6 @@
 const anchor = require("@project-serum/anchor");
-const serumCmn = require("@project-serum/common");
-const TokenInstructions = require("@project-serum/serum").TokenInstructions;
 const assert = require("assert");
+const BN = anchor.BN;
 const Transaction = require("@project-serum/anchor").web3.Transaction;
 const SystemProgram = require("@project-serum/anchor").web3.SystemProgram;
 
@@ -20,11 +19,11 @@ describe("Push Notification Fee Collector", () => {
 
   let receiver = anchor.web3.Keypair.generate();
 
-  
-
   it("initialized the smart contract", async () => {
 
-    await program.rpc.init( {
+    //  let fee = 443000;
+
+    await program.rpc.init(new BN(443000), {
       accounts: {
         mainData: mainData.publicKey,
         vault: vaultPublickey,
@@ -47,7 +46,6 @@ describe("Push Notification Fee Collector", () => {
 
     payer= program.provider.wallet;
 
-    
     await program.rpc.prepaidNotification("123", {
       accounts: {
         mainData: mainData.publicKey,
@@ -98,7 +96,6 @@ describe("Push Notification Fee Collector", () => {
   }); 
  
   it("Update and Send Notification", async () => {
-    
     
     let [event, slot] = await new Promise((resolve, _reject) => {
       listener = program.addEventListener("NotificationSent", (event, slot) => {
