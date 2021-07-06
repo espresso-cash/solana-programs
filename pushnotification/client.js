@@ -17,7 +17,7 @@ async function main() {
   const idl = JSON.parse(require('fs').readFileSync('./target/idl/fee_notification_collector.json', 'utf8'));
 
   // Address of the deployed program.
-  const programId = new anchor.web3.PublicKey('F88FEx1ua6T4q5JjFZE6q77yj3bXTgsnvVoEJHxeoEDk');
+  const programId = new anchor.web3.PublicKey('4vAAGuHTDeMS8Enxwem7nKakcDh23Q7H1iDQafxMRzcd');
 
   // Generate the program client from IDL.
   const program = new anchor.Program(idl, programId);
@@ -32,7 +32,7 @@ async function main() {
 
   let receiver = anchor.web3.Keypair.generate();
 
-  await program.rpc.init( {
+  await program.rpc.init(new BN(443000), {
     accounts: {
       mainData: mainData.publicKey,
       vault: vaultPublickey,
