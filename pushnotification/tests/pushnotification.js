@@ -5,11 +5,11 @@ const assert = require("assert");
 const Transaction = require("@project-serum/anchor").web3.Transaction;
 const SystemProgram = require("@project-serum/anchor").web3.SystemProgram;
 
-describe("Fee Notification Collector", () => {
+describe("Push Notification Fee Collector", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.Provider.env());
 
-  const program = anchor.workspace.FeeNotificationCollector;
+  const program = anchor.workspace.Pushnotification;
 
   const mainData = anchor.web3.Keypair.generate(); //key for the new account for check data
   const updater = anchor.web3.Keypair.generate();

@@ -3,11 +3,10 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
 use anchor_lang::solana_program::{msg};
-use anchor_spl::token::{self, TokenAccount, Transfer};
 use std::convert::Into;
 
 #[program]
-pub mod fee_notification_collector {
+pub mod pushnotification {
     use super::*;
     
 
