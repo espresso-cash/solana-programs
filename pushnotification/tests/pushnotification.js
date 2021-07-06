@@ -20,9 +20,7 @@ describe("Push Notification Fee Collector", () => {
   let receiver = anchor.web3.Keypair.generate();
 
   it("initialized the smart contract", async () => {
-
-    //  let fee = 443000;
-
+    
     await program.rpc.init(new BN(443000), {
       accounts: {
         mainData: mainData.publicKey,
