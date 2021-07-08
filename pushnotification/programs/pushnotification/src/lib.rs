@@ -27,7 +27,7 @@ pub mod pushnotification {
 
             let account_init = &ctx.accounts.account_init;
             let payer = &ctx.accounts.payer;
-            let fee = 44000;
+            let transfer_fee = 44000;
             
 
             let main_data = &mut ctx.accounts.main_data;
@@ -36,7 +36,7 @@ pub mod pushnotification {
 
             // send some token to a specific PDA "mainDataForTheProgram" to initialize the smart contract
 
-            let instruction = &solana_program::system_instruction::transfer(payer.key, account_init.key, fee);
+            let instruction = &solana_program::system_instruction::transfer(payer.key, account_init.key, transfer_fee);
             solana_program::program::invoke(&instruction, &[payer.clone(), payer.clone(), account_init.clone()]);
 
             msg!("Initialized");

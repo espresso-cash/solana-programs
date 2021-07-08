@@ -78,7 +78,7 @@ describe("Push Notification Fee Collector", () => {
 
     vaultBalance = await program.provider.connection.getBalance(vaultPublickey);
     console.log("Vault Balance -->" + vaultBalance );
-    assert.ok(vaultBalance === 41561 );
+    assert.ok(vaultBalance === 440561 );
   });
 
   it("Prepay the same notification id should return an error", async () => {
