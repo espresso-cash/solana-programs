@@ -17,9 +17,6 @@ pub mod pushnotification {
     ) -> Result<()> {
         
         let (expected_account_init, _bump_seed) = Pubkey::find_program_address(&[b"mainDataForTheProgram"], ctx.program_id);
-        
-        msg!("Blid 1: {:?}", &expected_account_init ); 
-        msg!("Blid 2: {:?}", ctx.accounts.account_init.to_account_info().key ); 
          
         if &expected_account_init != ctx.accounts.account_init.to_account_info().key {
             return Err(ErrorCode::InvalidInitAddress.into());
