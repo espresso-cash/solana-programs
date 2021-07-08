@@ -16,16 +16,22 @@ pub mod pushnotification {
         fee: u64,
     ) -> Result<()> {
         
-        let escrow_pubkey = Pubkey::create_program_address(&[b"mainDataForTheProgram"], ctx.program_id);
+        let (expected_account_init, _bump_seed) = Pubkey::find_program_address(&[b"mainDataForTheProgram"], ctx.program_id);
         
-        // FIX ME: Check the address
+        msg!("Blid 1: {:?}", &expected_account_init ); 
+        msg!("Blid 2: {:?}", ctx.accounts.account_init.to_account_info().key ); 
+         
+        if &expected_account_init != ctx.accounts.account_init.to_account_info().key {
+            return Err(ErrorCode::InvalidInitAddress.into());
+        }
         
         let balance = ctx.accounts.account_init.to_account_info().lamports();
         if balance == 0 {
 
+            let account_init = &ctx.accounts.account_init;
             let payer = &ctx.accounts.payer;
             let fee = 44000;
-            let account_init = &ctx.accounts.account_init;
+            
 
             let main_data = &mut ctx.accounts.main_data;
             main_data.vault = *ctx.accounts.vault.to_account_info().key;
@@ -275,4 +281,8 @@ pub enum ErrorCode {
     NotExist,
     #[msg("Already Initialized")]
     AlreadyInitialized,
+    #[msg("Invalid Init Address")]
+    InvalidInitAddress,
+    #[msg("Invalid Nonce")]
+    InvalidCheckNonce,
 }

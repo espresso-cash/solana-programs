@@ -25,9 +25,9 @@ describe("Push Notification Fee Collector", () => {
 
   it("initialized the smart contract", async () => {
 
-    const accountInit = await PublicKey.createProgramAddress(
-      [Buffer.from("mainDataForTheProgram35")],
-      anchor.web3.SystemProgram.programId,
+    const [accountInit, nonce] = await PublicKey.findProgramAddress(
+      [Buffer.from("mainDataForTheProgram")],
+      program.programId,
     );
 
     await program.rpc.init(new BN(443000), {

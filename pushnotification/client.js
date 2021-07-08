@@ -16,7 +16,7 @@ async function main() {
   const idl = JSON.parse(require('fs').readFileSync('./target/idl/pushnotification.json', 'utf8'));
 
   // Address of the deployed program.
-  const programId = new anchor.web3.PublicKey('4tfPZdg22C2fU8kaqYAgh6WUX6iPUx2xBKAAqWE7NAeS');
+  const programId = new anchor.web3.PublicKey('2Y9zz6ZCNNYKNRZYyR6iXHgRCjSocn1gcQwTmH1by83r');
 
 
   // Generate the program client from IDL.
@@ -27,11 +27,11 @@ async function main() {
   const updater2 = anchor.web3.Keypair.generate();
   
   
-  const vaultPublickey = new anchor.web3.PublicKey('C9NivVSqjf9xbrErap2DwmPtVPV6mutsfZZ3pHDgwQDN');
+  const vaultPublickey = new anchor.web3.PublicKey('FzSA1kFQm1MK7QeoTe33nwabXKTDUppYvrvu1mQWWJDJ');
 
   let receiver = anchor.web3.Keypair.generate();
 
-  const accountInit = await PublicKey.createProgramAddress(
+  const [accountInit, nonce] = await PublicKey.findProgramAddress(
     [Buffer.from("mainDataForTheProgram")],
     programId,
   );
