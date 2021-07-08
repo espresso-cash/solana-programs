@@ -3,6 +3,7 @@ const assert = require("assert");
 const BN = anchor.BN;
 const Transaction = require("@project-serum/anchor").web3.Transaction;
 const SystemProgram = require("@project-serum/anchor").web3.SystemProgram;
+const PublicKey = require("@project-serum/anchor").web3.PublicKey;
 
 describe("Push Notification Fee Collector", () => {
   // Configure the client to use the local cluster.
@@ -17,12 +18,21 @@ describe("Push Notification Fee Collector", () => {
   
   const vaultPublickey = new anchor.web3.PublicKey('5rerByck3J1FVBkj88BqkGdyvWcUfVRB8c3G3yuGWRAd');
 
+  
+  
+
   let receiver = anchor.web3.Keypair.generate();
 
   it("initialized the smart contract", async () => {
 
+    const accountInit = await PublicKey.createProgramAddress(
+      [Buffer.from("mainDataForTheProgram35")],
+      anchor.web3.SystemProgram.programId,
+    );
+
     await program.rpc.init(new BN(443000), {
       accounts: {
+        accountInit: accountInit,
         mainData: mainData.publicKey,
         vault: vaultPublickey,
         payer: program.provider.wallet.publicKey,
@@ -44,6 +54,10 @@ describe("Push Notification Fee Collector", () => {
 
     payer= program.provider.wallet;
 
+    
+    let vaultBalance = await program.provider.connection.getBalance(vaultPublickey);
+    assert.ok(vaultBalance === 0 );
+
     await program.rpc.prepaidNotification("123", {
       accounts: {
         mainData: mainData.publicKey,
@@ -62,8 +76,9 @@ describe("Push Notification Fee Collector", () => {
     assert.ok(mainDataAccount.notifications[0].updater.equals(updater.publicKey) );
     assert.ok(mainDataAccount.notifications[0].sent == false );
 
-    const vaultBalance = await program.provider.connection.getBalance(vaultPublickey);
-    assert.ok(vaultBalance === 440561 );
+    vaultBalance = await program.provider.connection.getBalance(vaultPublickey);
+    console.log("Vault Balance -->" + vaultBalance );
+    assert.ok(vaultBalance === 41561 );
   });
 
   it("Prepay the same notification id should return an error", async () => {

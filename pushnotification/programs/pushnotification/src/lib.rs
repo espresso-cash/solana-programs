@@ -15,10 +15,31 @@ pub mod pushnotification {
         ctx: Context<Init>,
         fee: u64,
     ) -> Result<()> {
-        let main_data = &mut ctx.accounts.main_data;
-        main_data.vault = *ctx.accounts.vault.to_account_info().key;
-        main_data.fee = fee;
-        msg!("Initialized");
+        
+        let escrow_pubkey = Pubkey::create_program_address(&[b"mainDataForTheProgram"], ctx.program_id);
+        
+        // FIX ME: Check the address
+        
+        let balance = ctx.accounts.account_init.to_account_info().lamports();
+        if balance == 0 {
+
+            let payer = &ctx.accounts.payer;
+            let fee = 44000;
+            let account_init = &ctx.accounts.account_init;
+
+            let main_data = &mut ctx.accounts.main_data;
+            main_data.vault = *ctx.accounts.vault.to_account_info().key;
+            main_data.fee = fee;
+
+            // send some token to a specific PDA "mainDataForTheProgram" to initialize the smart contract
+
+            let instruction = &solana_program::system_instruction::transfer(payer.key, account_init.key, fee);
+            solana_program::program::invoke(&instruction, &[payer.clone(), payer.clone(), account_init.clone()]);
+
+            msg!("Initialized");
+        }else{
+            return Err(ErrorCode::AlreadyInitialized.into());
+        }
         Ok(())
     }
 
@@ -168,6 +189,8 @@ pub struct Init<'info> {
     // Check being created.
     #[account(init)]
     main_data: ProgramAccount<'info, MainData>,
+    #[account(mut)]
+    account_init: AccountInfo<'info>,
     // Check destination vault.
     vault: AccountInfo<'info>,
     #[account(signer)]
@@ -250,4 +273,6 @@ pub enum ErrorCode {
     AlreadyExist,
     #[msg("Notification doesn't Exist")]
     NotExist,
+    #[msg("Already Initialized")]
+    AlreadyInitialized,
 }
