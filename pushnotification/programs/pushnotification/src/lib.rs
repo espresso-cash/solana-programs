@@ -243,7 +243,6 @@ pub struct Send<'info> {
 
 #[account]
 pub struct MainData {
-    updater: Pubkey,
     vault: Pubkey,
     fee: u64,
     notifications: Vec<Notification>,
