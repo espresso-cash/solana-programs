@@ -8,49 +8,40 @@ const PublicKey = require("@project-serum/anchor").web3.PublicKey;
 describe("Push Notification Fee Collector", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.Provider.env());
-
   const program = anchor.workspace.Pushnotification;
-
-  const mainData = anchor.web3.Keypair.generate(); //key for the new account for check data
   const updater = anchor.web3.Keypair.generate();
   const updater2 = anchor.web3.Keypair.generate();
-  
-  
   const vaultPublickey = new anchor.web3.PublicKey('5rerByck3J1FVBkj88BqkGdyvWcUfVRB8c3G3yuGWRAd');
-
-  
-  
-
   let receiver = anchor.web3.Keypair.generate();
 
   it("initialized the smart contract", async () => {
 
-    const [accountInit, nonce] = await PublicKey.findProgramAddress(
+    const [mainData, nonce] = await PublicKey.findProgramAddress(
       [Buffer.from("mainDataForTheProgram")],
       program.programId,
     );
 
-    await program.rpc.init(new BN(443000), {
+    await program.rpc.init(new BN(443000), "mainDataForTheProgram", nonce, {
       accounts: {
-        accountInit: accountInit,
-        mainData: mainData.publicKey,
+        mainData,
         vault: vaultPublickey,
         payer: program.provider.wallet.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       },
-      signers: [mainData],
-      instructions: [
-        await program.account.mainData.createInstruction(mainData, 200), // create an check account 
-      ],
     });
 
-    const mainDataAccount = await program.account.mainData.fetch(mainData.publicKey);
+    const mainDataAccount = await program.account.mainData.fetch(mainData);
     assert.ok(mainDataAccount.vault.equals(vaultPublickey));
   });
 
-
+  
   it("Prepay a notification", async () => {
+
+    const [mainData, nonce] = await PublicKey.findProgramAddress(
+      [Buffer.from("mainDataForTheProgram")],
+      program.programId,
+    );
 
     payer= program.provider.wallet;
 
@@ -60,7 +51,7 @@ describe("Push Notification Fee Collector", () => {
 
     await program.rpc.prepaidNotification("123", {
       accounts: {
-        mainData: mainData.publicKey,
+        mainData,
         vault: vaultPublickey,
         updater: updater.publicKey,
         payer: program.provider.wallet.publicKey,
@@ -71,7 +62,7 @@ describe("Push Notification Fee Collector", () => {
     });
     
     
-    const mainDataAccount = await program.account.mainData.fetch(mainData.publicKey);
+    const mainDataAccount = await program.account.mainData.fetch(mainData);
     assert.ok(mainDataAccount.notifications[0].notificationId == "123" );
     assert.ok(mainDataAccount.notifications[0].updater.equals(updater.publicKey) );
     assert.ok(mainDataAccount.notifications[0].sent == false );
@@ -81,14 +72,21 @@ describe("Push Notification Fee Collector", () => {
     assert.ok(vaultBalance === 440561 );
   });
 
+  
+
   it("Prepay the same notification id should return an error", async () => {
 
+    const [mainData, nonce] = await PublicKey.findProgramAddress(
+      [Buffer.from("mainDataForTheProgram")],
+      program.programId,
+    );
+    
     payer= program.provider.wallet;
 
     try {
       const tx = await program.rpc.prepaidNotification("123", {
         accounts: {
-          mainData: mainData.publicKey,
+          mainData,
           vault: vaultPublickey,
           updater: updater2.publicKey,
           payer: program.provider.wallet.publicKey,
@@ -108,15 +106,22 @@ describe("Push Notification Fee Collector", () => {
 
   }); 
  
+  
+
   it("Update and Send Notification", async () => {
     
+    const [mainData, nonce] = await PublicKey.findProgramAddress(
+      [Buffer.from("mainDataForTheProgram")],
+      program.programId,
+    );
+
     let [event, slot] = await new Promise((resolve, _reject) => {
       listener = program.addEventListener("NotificationSent", (event, slot) => {
         resolve([event, slot]);
       });
       program.rpc.updateAndSend("123", "1", "EncryptedNotification", {
         accounts: {
-          mainData: mainData.publicKey,
+          mainData,
           updater: updater.publicKey,
           payer: program.provider.wallet.publicKey,
         },
@@ -130,14 +135,21 @@ describe("Push Notification Fee Collector", () => {
     assert.ok(event.messageType == "1");
     assert.ok(event.encryptedPayload == "EncryptedNotification");
 
-    const mainDataAccount = await program.account.mainData.fetch(mainData.publicKey);
+    const mainDataAccount = await program.account.mainData.fetch(mainData);
     assert.ok(mainDataAccount.notifications[0].sent == true );
     
   });
 
+  
+
   it("Update and Send Notification", async () => {
     payer= program.provider.wallet;
     const payer2 = anchor.web3.Keypair.generate();
+
+    const [mainData, nonce] = await PublicKey.findProgramAddress(
+      [Buffer.from("mainDataForTheProgram")],
+      program.programId,
+    );
 
     await program.provider.send(
       (() => {
@@ -156,7 +168,7 @@ describe("Push Notification Fee Collector", () => {
     try {
       const tx =await program.rpc.updateAndSend("123", "1", "EncryptedNotification", {
         accounts: {
-          mainData: mainData.publicKey,
+          mainData,
           updater: updater.publicKey,
           payer: program.provider.wallet.publicKey,
         },
@@ -187,7 +199,7 @@ describe("Push Notification Fee Collector", () => {
     try {
       const tx =await program.rpc.updateAndSend("123000", "1", "EncryptedNotification", {
         accounts: {
-          mainData: mainData.publicKey,
+          mainData,
           updater: updater.publicKey,
           payer: program.provider.wallet.publicKey,
         },
@@ -202,11 +214,19 @@ describe("Push Notification Fee Collector", () => {
     }
   });
 
+  
+
   it("should return an error if updater is wrong when Update and Send Notification", async () => {
+    
+    const [mainData, nonce] = await PublicKey.findProgramAddress(
+      [Buffer.from("mainDataForTheProgram")],
+      program.programId,
+    );
+
     try {
       const tx = await program.rpc.updateAndSend("123", "1", "EncryptedNotification", {
         accounts: {
-          mainData: mainData.publicKey,
+          mainData,
           updater: updater2.publicKey,
           payer: program.provider.wallet.publicKey,
         },

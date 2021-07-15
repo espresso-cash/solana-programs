@@ -14,35 +14,16 @@ pub mod pushnotification {
     pub fn init(
         ctx: Context<Init>,
         fee: u64,
+        _domain: String,
+        _bump: u8,
     ) -> Result<()> {
         
-        let (expected_account_init, _bump_seed) = Pubkey::find_program_address(&[b"mainDataForTheProgram"], ctx.program_id);
-         
-        if &expected_account_init != ctx.accounts.account_init.to_account_info().key {
-            return Err(ErrorCode::InvalidInitAddress.into());
-        }
+        let main_data = &mut ctx.accounts.main_data;
+        main_data.vault = *ctx.accounts.vault.to_account_info().key;
+        main_data.fee = fee;
+
+        msg!("Initialized");
         
-        let balance = ctx.accounts.account_init.to_account_info().lamports();
-        if balance == 0 {
-
-            let account_init = &ctx.accounts.account_init;
-            let payer = &ctx.accounts.payer;
-            let transfer_fee = 44000;
-            
-
-            let main_data = &mut ctx.accounts.main_data;
-            main_data.vault = *ctx.accounts.vault.to_account_info().key;
-            main_data.fee = fee;
-
-            // send some token to a specific PDA "mainDataForTheProgram" to initialize the smart contract
-
-            let instruction = &solana_program::system_instruction::transfer(payer.key, account_init.key, transfer_fee);
-            solana_program::program::invoke(&instruction, &[payer.clone(), payer.clone(), account_init.clone()]);
-
-            msg!("Initialized");
-        }else{
-            return Err(ErrorCode::AlreadyInitialized.into());
-        }
         Ok(())
     }
 
@@ -188,12 +169,17 @@ pub mod pushnotification {
 }
 
 #[derive(Accounts)]
+#[instruction(fee: u64, domain: String, bump: u8)]
 pub struct Init<'info> {
     // Check being created.
-    #[account(init)]
+    #[account(
+        init,
+        seeds = [domain.as_bytes()],
+        bump = bump,
+        payer = payer,
+        space = 4000,
+    )]
     main_data: ProgramAccount<'info, MainData>,
-    #[account(mut)]
-    account_init: AccountInfo<'info>,
     // Check destination vault.
     vault: AccountInfo<'info>,
     #[account(signer)]
@@ -242,6 +228,7 @@ pub struct Send<'info> {
 }
 
 #[account]
+#[derive(Default)]
 pub struct MainData {
     vault: Pubkey,
     fee: u64,
