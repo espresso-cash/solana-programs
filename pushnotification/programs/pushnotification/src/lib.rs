@@ -15,7 +15,6 @@ pub mod pushnotification {
         fee: u64,
         _bump: u8,
     ) -> Result<()> {
-        
         let main_data = &mut ctx.accounts.main_data;
         main_data.vault = *ctx.accounts.vault.to_account_info().key;
         main_data.fee = fee;
@@ -28,7 +27,6 @@ pub mod pushnotification {
         ctx: Context<PrepaidNotification>,
         notification_id: String,
     ) -> Result<()> {
-        
         let fee_payer = &ctx.accounts.payer;
         let sender = &ctx.accounts.payer;
         let recipient = &ctx.accounts.vault;
@@ -65,8 +63,6 @@ pub mod pushnotification {
         message_type: String,
         encrypted_payload: String,
     ) -> Result<()> {
-        
-        
         let updater = &ctx.accounts.updater;
         let main_data = &mut ctx.accounts.main_data;
         let notification = &mut main_data.notifications.iter().find(|x| x.notification_id == notification_id);
