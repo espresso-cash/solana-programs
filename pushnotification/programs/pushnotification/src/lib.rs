@@ -20,7 +20,6 @@ pub mod pushnotification {
         let main_data = &mut ctx.accounts.main_data;
         main_data.vault = *ctx.accounts.vault.to_account_info().key;
         main_data.fee = fee;
-
         msg!("Initialized");
         
         Ok(())
@@ -33,11 +32,8 @@ pub mod pushnotification {
         
         let fee_payer = &ctx.accounts.payer;
         let sender = &ctx.accounts.payer;
-
         let recipient = &ctx.accounts.vault;
-        
         let main_data = &mut ctx.accounts.main_data;
-
         let notification = main_data.notifications.iter().find(|x| x.notification_id == notification_id);
          
 	    if match notification { Some(_notification) => true, None => false,}
@@ -73,10 +69,7 @@ pub mod pushnotification {
         
         
         let updater = &ctx.accounts.updater;
-
-        // Mark the notification has sent
         let main_data = &mut ctx.accounts.main_data;
-
         let notification = &mut main_data.notifications.iter().find(|x| x.notification_id == notification_id);
 
         if match notification { Some(_notification) => true, None => false,}
@@ -124,13 +117,10 @@ pub mod pushnotification {
 
         let fee_payer = &ctx.accounts.payer;
         let sender = &ctx.accounts.payer;
-
         let recipient = &ctx.accounts.vault;
-        
         let main_data = &mut ctx.accounts.main_data;
-
         let notification = main_data.notifications.iter().find(|x| x.notification_id == notification_id);
-         
+        
 	    if match notification { Some(_notification) => true, None => false,}
         {
             return Err(ErrorCode::AlreadyExist.into());
