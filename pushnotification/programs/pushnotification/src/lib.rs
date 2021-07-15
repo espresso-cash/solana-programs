@@ -14,7 +14,6 @@ pub mod pushnotification {
     pub fn init(
         ctx: Context<Init>,
         fee: u64,
-        _domain: String,
         _bump: u8,
     ) -> Result<()> {
         
@@ -171,12 +170,12 @@ pub mod pushnotification {
 }
 
 #[derive(Accounts)]
-#[instruction(fee: u64, domain: String, bump: u8)]
+#[instruction(fee: u64, bump: u8)]
 pub struct Init<'info> {
     // Check being created.
     #[account(
         init,
-        seeds = [domain.as_bytes()],
+        seeds = ["mainDataForTheProgram".as_bytes()],
         bump = bump,
         payer = payer,
         space = 4000,

@@ -21,7 +21,7 @@ describe("Push Notification Fee Collector", () => {
       program.programId,
     );
 
-    await program.rpc.init(new BN(443000), "mainDataForTheProgram", nonce, {
+    await program.rpc.init(new BN(443000), nonce, {
       accounts: {
         mainData,
         vault: vaultPublickey,
