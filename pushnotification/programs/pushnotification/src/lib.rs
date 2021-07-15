@@ -155,7 +155,7 @@ pub mod pushnotification {
 #[derive(Accounts)]
 #[instruction(fee: u64, bump: u8)]
 pub struct Init<'info> {
-    // Check being created.
+    // main Data Account being created.
     #[account(
         init,
         seeds = ["mainDataForTheProgram".as_bytes()],
@@ -164,7 +164,7 @@ pub struct Init<'info> {
         space = 4000,
     )]
     main_data: ProgramAccount<'info, MainData>,
-    // Check destination vault.
+    // Fee destination vault.
     vault: AccountInfo<'info>,
     #[account(signer)]
     payer: AccountInfo<'info>,
@@ -174,10 +174,8 @@ pub struct Init<'info> {
 
 #[derive(Accounts)]
 pub struct PrepaidNotification<'info> {
-    // Check being created.
     #[account(mut, has_one = vault)]
     main_data: ProgramAccount<'info, MainData>,
-    // Check destination vault.
     #[account(mut)]
     vault: AccountInfo<'info>,
     updater: AccountInfo<'info>,
@@ -199,10 +197,8 @@ pub struct UpdateAndSend<'info> {
 
 #[derive(Accounts)]
 pub struct Send<'info> {
-    // Check being created.
     #[account(mut, has_one = vault)]
     main_data: ProgramAccount<'info, MainData>,
-    // Check destination vault.
     #[account(mut)]
     vault: AccountInfo<'info>,
     #[account(signer)]
@@ -246,10 +242,4 @@ pub enum ErrorCode {
     AlreadyExist,
     #[msg("Notification doesn't Exist")]
     NotExist,
-    #[msg("Already Initialized")]
-    AlreadyInitialized,
-    #[msg("Invalid Init Address")]
-    InvalidInitAddress,
-    #[msg("Invalid Nonce")]
-    InvalidCheckNonce,
 }
