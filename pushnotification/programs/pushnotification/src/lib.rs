@@ -18,6 +18,8 @@ pub mod pushnotification {
         _bump: u8,
     ) -> Result<()> {
         
+        // TODO: checkDomain is correct
+
         let main_data = &mut ctx.accounts.main_data;
         main_data.vault = *ctx.accounts.vault.to_account_info().key;
         main_data.fee = fee;
