@@ -9,7 +9,6 @@ use std::convert::Into;
 #[program]
 pub mod pushnotification {
     use super::*;
-    
 
     pub fn init(
         ctx: Context<Init>,
