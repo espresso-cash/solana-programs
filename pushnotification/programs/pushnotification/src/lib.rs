@@ -51,7 +51,6 @@ pub mod pushnotification {
                 .notifications
                 .push(new_notification);
             msg!("Notification Prepaid Successfull ");
-            
         }
         
         Ok(())
@@ -145,7 +144,6 @@ pub mod pushnotification {
             msg!("-- Notification Sent: {:?}",  notification_id);
             msg!("-- Notification Message Type: {:?}",  message_type);
             msg!("-- Notification Encrypted Payload: {:?}",  encrypted_payload);
-            
         }
         
         Ok(())
